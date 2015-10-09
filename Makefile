@@ -6,10 +6,10 @@ SHELL = /bin/bash
 CWD = $(shell pwd)
 
 define check_file
-	@if [[ -e $1 && "$(OVERWRITE)" != "1" ]]; then \
-		echo "make install won't overwrite $1"; \
-		echo "1) remove it yourself or 2) use 'make install OVERWRITE=1'"; \
-		false \
+@if [[ -e $1 && "$(OVERWRITE)" != "1" ]]; then \
+	echo "make install won't overwrite $1"; \
+	echo "1) remove it yourself or 2) use 'make install OVERWRITE=1'"; \
+	false \
 	else true; \
 	fi
 endef
@@ -36,10 +36,11 @@ $(HOME)/.%: %
 
 install: $(clearfiles) $(TARGETS)
 	git submodule update --init
+	vim +PluginInstall +qall
 
 update:
 	git pull
-	git submodule sync
 	git submodule update --init
+	vim +PluginUpdate +qall
 
 .PHONY: install update clean_mine

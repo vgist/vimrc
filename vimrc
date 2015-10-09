@@ -1,27 +1,47 @@
+" create needed folder
+call system("mkdir -p $HOME/.vim/.swap")
+
 """""""""""""""""""""""""
-" Basic features
+" vundle
 """""""""""""""""""""""""
-let pathogen_disabled = []
-if !has('gui_running')
-    call add(g:pathogen_disabled, 'css-color')
+if &compatible                      " be iMproved, required
+    set nocompatible
 endif
-silent! call pathogen#infect()
+filetype off                        " required
+
+set rtp+=$HOME/.vim/vundle/Vundle.vim   " submodule
+call vundle#begin()
+Plugin 'Modeliner'                  "vim-scripts
+
+Plugin 'ervandew/supertab'
+Plugin 'scrooloose/nerdtree'
+Plugin 'iHavee/vim-monokai', {'name': 'monokai'}
+Plugin 'airblade/vim-gitgutter', {'name': 'gitgutter'}
+Plugin 'hail2u/vim-css3-syntax', {'name': 'css3-syntax'}
+Plugin 'plasticboy/vim-markdown', {'name': 'markdown'}
+Plugin 'aperezdc/vim-template', {'name': 'template'}
+
+call vundle#end()                   " required
+
+"""""""""""""""""""""""""
+" global
+"""""""""""""""""""""""""
 
 " Display options
 syntax on
 set cursorline
+"set cursorcolumn
 set number
-set list!                       " Display unprintable characters
+set list!                           " Display unprintable characters
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
 
 " color
-if $TERM =~ '^xterm' || $TERM =~ '^screen' || $TERM=~ '256color$' || has('gui_running')
-    try
-        colorscheme monokai
-    catch
-        colorscheme default
-    endtry
-endif
+try
+    set t_Co=256
+    colorscheme monokai
+catch
+    colorscheme default
+endtry
 
 " Statusline
 if has("statusline")
@@ -35,30 +55,23 @@ set termencoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,gb18030,big5,latin1
 
-" foldenable
-if exists("&foldenable") && v:version >= 700
-    set foldenable
-    " set foldcolumn=2
-    set foldmethod=indent
-    set foldlevel=1
-endif
-
 " Misc
-filetype plugin indent on       " Do filetype detection and load custom file plugins and indent files
-set hidden                      " Don't abandon buffers moved to the background
-set wildmenu                    " Enhanced completion hints in command line
-set wildmode=list:longest,full  " Complete longest common match and show possible matches and wildmenu
-set backspace=eol,start,indent  " Allow backspacing over indent, eol, & start
-set complete=.,w,b,u,U,t,i,d    " Do lots of scanning on tab completion
-set updatecount=100             " Write swap file to disk every 100 chars
-set directory=~/.vim/swap       " Directory to use for the swap file
-set diffopt=filler,iwhite       " In diff mode, ignore whitespace changes and align unchanged lines
-set history=1000                " Remember 1000 commands
-set scrolloff=3                 " Start scrolling 3 lines before the horizontal window border
-set visualbell t_vb=            " Disable error bells
-set shortmess+=A                " Always edit file, even when swap file is found
+filetype plugin indent on           " Do filetype detection and load custom file plugins and indent files
+set hidden                          " Don't abandon buffers moved to the background
+set wildmenu                        " Enhanced completion hints in command line
+set wildmode=list:longest,full      " Complete longest common match and show possible matches and wildmenu
+set backspace=eol,start,indent      " Allow backspacing over indent, eol, & start
+set complete=.,w,b,u,U,t,i,d        " Do lots of scanning on tab completion
+set updatecount=100                 " Write swap file to disk every 100 chars
+set directory=$HOME/.vim/.swap      " Directory to use for the swap file
+set diffopt=filler,iwhite           " In diff mode, ignore whitespace changes and align unchanged lines
+set history=1000                    " Remember 1000 commands
+set scrolloff=3                     " Start scrolling 3 lines before the horizontal window border
+set visualbell t_vb=                " Disable error bells
+set shortmess+=A                    "Always Always edit file, even when swap file is found
 set nobackup
 set nowritebackup
+" set mouse=a                       " mouse wheel in xterm
 
 " up/down on displayed lines, not real lines. More useful than painful.
 noremap k gk
@@ -67,7 +80,7 @@ noremap j gj
 " Formatting, indentation and tabbing
 "set autoindent
 set autoindent smartindent
-set smarttab                    " Make <tab> and <backspace> smarter
+set smarttab                        " Make <tab> and <backspace> smarter
 set expandtab
 "set noexpandtab
 set tabstop=4
@@ -86,18 +99,15 @@ set modeline
 "   "500 : save up to 500 lines for each registeD
 "   :1000 : up to 1000 lines of command-line history will be remembered
 "   n... : where to save the viminfo files
-set viminfo=%100,'100,/100,h,\"500,:1000,n~/.vim/swap/viminfo
-
-" ctags: recurse up to home to find tags. See
-" http://stackoverflow.com/questions/563616/vim-and-ctags-tips-and-tricks
-" for an explanation and other ctags tips/tricks
-set tags+=tags;$HOME
+set viminfo=%100,'100,/100,h,\"500,:1000,n$HOME/.vim/.swap/viminfo
 
 " Undo
 set undolevels=10000
+" Allow undoes to persist even after a file is closed
 if has("persistent_undo")
-    set undodir=~/.vim/.undo        " Allow undoes to persist even after a file is closed
+    set undodir=$HOME/.vim/.swap
     set undofile
+    set undoreload=10000
 endif
 
 " Search settings
@@ -156,11 +166,10 @@ map <PageUp>   :lprev<CR>
 noremap K k
 
 " Resize window splits
-" TODO Fix mousewheel
-nnoremap <Up>    3<C-w>-
-nnoremap <Down>  3<C-w>+
-nnoremap <Left>  3<C-w><
-nnoremap <Right> 3<C-w>>
+nnoremap <C-k>    3<C-w>-
+nnoremap <C-j>    3<C-w>+
+nnoremap <C-h>    3<C-w><
+nnoremap <C-l>    3<C-w>>
 
 nnoremap _ :split<cr>
 nnoremap \| :vsplit<cr>
@@ -170,106 +179,6 @@ vmap u :!sort -u<CR>
 
 " Write file when you forget to use sudo
 cmap w!! w !sudo tee % >/dev/null
-
-"""""""""""""""""""""""""
-" Plugins
-"""""""""""""""""""""""""
-nnoremap <Leader>b :BufSurfBack<cr>
-nnoremap <Leader>f :BufSurfForward<cr>
-
-" TODO Merge the NERDTreeFind with Toggle inteilligently.
-nnoremap <C-n> :NERDTreeToggle<cr>
-
-let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$',
-            \ '\.so$', '\.egg$', '^\.git$', '\.cmi', '\.cmo', '\.elc$',
-            \ '\.doc\?', '\.xls\?', '\.ppt\?', '\.rtf$', '\.iso$', '\.img',
-            \ '\.jp\+g$', '\.png$', '\.gif$', '\.svg$', '\.bmp$', '\.tiff$', '\.pdf$' ]
-let NERDTreeHighlightCursorline=1
-let NERDTreeShowBookmarks=1
-let NERDTreeShowFiles=1
-
-"autocmd vimenter * NERDTree
-autocmd vimenter *
-            \ if !argc() |
-            \ NERDTree |
-            \ endif |
-autocmd bufenter *
-            \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") |
-            \ q |
-            \ endif |
-autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()
-
-nnoremap <silent> <Leader>gd :Gdiff<CR>
-nnoremap <silent> <Leader>gb :Gblame<CR>
-
-nnoremap <Leader>a :Ack
-
-" Put a space around comment markers
-let g:NERDSpaceDelims = 1
-
-map <Leader>l :MBEOpen<cr>
-let g:miniBufExplorerMoreThanOne = 10000
-let g:miniBufExplModSelTarget = 1
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplSplitBelow=1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplVSplit = 20
-
-let g:syntastic_enable_signs=1
-let g:syntastic_mode_map = { 'mode': 'active',
-            \ 'active_filetypes': [],
-            \ 'passive_filetypes': ['c', 'html', 'python', 'ruby', 'scss', 'scala'] }
-
-let g:quickfixsigns_classes=['qfl', 'vcsdiff', 'breakpoints']
-
-let g:ctrlp_map = '<Leader>.'
-let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so'
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_regexp = 1
-let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files']
-
-"""""""""""""""""""""""""
-" Tabular
-"""""""""""""""""""""""""
-noremap \= :Tabularize /=<CR>
-noremap \: :Tabularize /^[^:]*:\zs/l0l1<CR>
-noremap \> :Tabularize /=><CR>
-noremap \, :Tabularize /,\zs/l0l1<CR>
-noremap \{ :Tabularize /{<CR>
-noremap \\| :Tabularize /\|<CR>
-noremap \& :Tabularize /\(&\\|\\\\\)<CR>
-
-"""""""""""""""""""""""""
-" Tagbar
-"""""""""""""""""""""""""
-nnoremap <Leader>t :TagbarOpen fjc<CR>
-let g:TagbarShowTag = 1
-
-"""""""""""""""""""""""""
-" Screen settings
-"""""""""""""""""""""""""
-let g:ScreenImpl = 'Tmux'
-let g:ScreenShellTmuxInitArgs = '-2'
-let g:ScreenShellInitialFocus = 'shell'
-let g:ScreenShellQuitOnVimExit = 0
-
-map <C-\> :ScreenShellVertical<CR>
-
-"""""""""""""""""""""""""
-" Ruby Stuff
-"""""""""""""""""""""""""
-command -nargs=? -complete=shellcmd W  :w | :call ScreenShellSend("load '".@%."';")
-map <Leader>r :w<CR> :call ScreenShellSend("rspec ".@% . ':' . line('.'))<CR>
-map <Leader>w :w<CR> :call ScreenShellSend("break ".@% . ':' . line('.'))<CR>
-map <Leader>, :w<CR> :call ScreenShellSend("\e[A")<CR>
-
-"""""""""""""""""""""""""
-" Python
-"""""""""""""""""""""""""
-autocmd FileType python setlocal et sta sw=4 sts=4
-let g:pydiction_location = '~/.vim/bundle/pydiction/complete-dict'
-let g:pydiction_menu_height = 10
-map <F5> :!python %<CR>
 
 """""""""""""""""""""""""
 " Cscope
@@ -292,16 +201,60 @@ if has("cscope")
 end
 
 """""""""""""""""""""""""
+" CSS3-Syntax
+"""""""""""""""""""""""""
+augroup VimCSS3Syntax
+    autocmd!
+    autocmd FileType css setlocal iskeyword+=-
+augroup END
+
+"""""""""""""""""""""""""
+" NERDTree
+"""""""""""""""""""""""""
+nnoremap <C-n> :NERDTreeToggle<cr>
+let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$',
+            \ '\.so$', '\.egg$', '^\.git$', '\.cmi', '\.cmo', '\.elc$',
+            \ '\.doc\?', '\.xls\?', '\.ppt\?', '\.rtf$', '\.iso$', '\.img',
+            \ '\.jp\+g$', '\.png$', '\.gif$', '\.svg$', '\.bmp$', '\.tiff$', '\.pdf$' ]
+let NERDTreeHighlightCursorline=1
+let NERDTreeShowBookmarks=1
+let NERDTreeShowFiles=1
+" autocmd vimenter * NERDTree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"""""""""""""""""""""""""
+" template
+"""""""""""""""""""""""""
+" let g:templates_plugin_loaded = 1
+" let g:templates_no_autocmd = 1
+let g:username = "Register"
+let g:email = "registerdedicated(at)gmail.com"
+let g:license = "GPLv3"
+
+"""""""""""""""""""""""""
+" Supertab
+"""""""""""""""""""""""""
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+"""""""""""""""""""""""""
+" GitGutter
+"""""""""""""""""""""""""
+let g:GitGutterEnable = 1
+
+"""""""""""""""""""""""""
 " Markdown
 """""""""""""""""""""""""
 let g:vim_markdown_folding_disabled=1
-"let g:vim_markdown_initial_foldlevel=1
+let g:vim_markdown_no_default_key_mappings=1
 let g:vim_markdown_math=1
 let g:vim_markdown_frontmatter=1
 
 """""""""""""""""""""""""
 " Local config
 """""""""""""""""""""""""
-silent! so ~/.vim/vimrc.mine
+silent! so $HOME/.vim/vimrc.mine
 
-" TODO raise contrast for comments
+" vim: set et fenc=utf-8 ff=unix sts=4 sw=4 ts=4 :

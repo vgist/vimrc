@@ -1,6 +1,8 @@
-swap/viminfo
-doc/tags
-.netrwhist
-/.undo
-/spell
-/view
+.swap/*
+bundle/*
+
+# Mac
+.DS_Store
+.Spotlight-v100
+*.pyc
+*~

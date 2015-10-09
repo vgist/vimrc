@@ -3,17 +3,13 @@ Installation
 
 To install, run
 
-	git clone git://gitcafe.com/Havee/vimrc.git ~/.vim
+	git clone git://github.com/iHavee/vimrc.git ~/.vim
 	cd ~/.vim
 	make install
 
 To update the repository, run
 
 	make update
-
-or
-
-	git init; git submodule update --init
 
 Note
 -----
@@ -28,7 +24,6 @@ If the result is 8, that means your Terminal was using 8 bit color (e.g. xterm o
 
 	$ echo "export TERM=xterm-256color" >> ~/.bashrc
 
-**Depends On curl for gist on this configration**
 
 Other Notes
 ------------
