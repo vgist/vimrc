@@ -1,1 +1,1 @@
-set noexpandtab
+gitconfig.vim

@@ -1,5 +1,6 @@
 .swap/*
 bundle/*
+autoload/*
 
 # Mac
 .DS_Store

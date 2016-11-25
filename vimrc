@@ -1,94 +1,10 @@
-" create needed folder
-call system("mkdir -p $HOME/.vim/.swap")
+" Create needed folder
+silent !mkdir -p $HOME/.vim/.swap
 
-"""""""""""""""""""""""""
-" vundle
-"""""""""""""""""""""""""
-if &compatible                      " be iMproved, required
+" Be iMproved, required
+if &compatible
     set nocompatible
 endif
-filetype off                        " required
-
-set rtp+=$HOME/.vim/vundle/Vundle.vim   " submodule
-call vundle#begin()
-Plugin 'Modeliner'                  "vim-scripts
-
-Plugin 'ervandew/supertab'
-Plugin 'scrooloose/nerdtree'
-Plugin 'iHavee/vim-monokai', {'name': 'monokai'}
-Plugin 'airblade/vim-gitgutter', {'name': 'gitgutter'}
-Plugin 'hail2u/vim-css3-syntax', {'name': 'css3-syntax'}
-Plugin 'plasticboy/vim-markdown', {'name': 'markdown'}
-Plugin 'aperezdc/vim-template', {'name': 'template'}
-
-call vundle#end()                   " required
-
-"""""""""""""""""""""""""
-" global
-"""""""""""""""""""""""""
-
-" Display options
-syntax on
-set cursorline
-"set cursorcolumn
-set number
-set list!                           " Display unprintable characters
-set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
-
-" color
-try
-    set t_Co=256
-    colorscheme monokai
-catch
-    colorscheme default
-endtry
-
-" Statusline
-if has("statusline")
-    set statusline=%F%m%r%h%w\ %=[FORMAT=%{&ff}]\ %{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"]\"}\ [TYPE=%Y]\ [POS=%l,%v][%p%%]
-    set laststatus=2
-endif
-
-" Encoding
-set encoding=utf-8
-set termencoding=utf-8
-set fileencoding=utf-8
-set fileencodings=ucs-bom,utf-8,gb18030,big5,latin1
-
-" Misc
-filetype plugin indent on           " Do filetype detection and load custom file plugins and indent files
-set hidden                          " Don't abandon buffers moved to the background
-set wildmenu                        " Enhanced completion hints in command line
-set wildmode=list:longest,full      " Complete longest common match and show possible matches and wildmenu
-set backspace=eol,start,indent      " Allow backspacing over indent, eol, & start
-set complete=.,w,b,u,U,t,i,d        " Do lots of scanning on tab completion
-set updatecount=100                 " Write swap file to disk every 100 chars
-set directory=$HOME/.vim/.swap      " Directory to use for the swap file
-set diffopt=filler,iwhite           " In diff mode, ignore whitespace changes and align unchanged lines
-set history=1000                    " Remember 1000 commands
-set scrolloff=3                     " Start scrolling 3 lines before the horizontal window border
-set visualbell t_vb=                " Disable error bells
-set shortmess+=A                    "Always Always edit file, even when swap file is found
-set nobackup
-set nowritebackup
-" set mouse=a                       " mouse wheel in xterm
-
-" up/down on displayed lines, not real lines. More useful than painful.
-noremap k gk
-noremap j gj
-
-" Formatting, indentation and tabbing
-"set autoindent
-set autoindent smartindent
-set smarttab                        " Make <tab> and <backspace> smarter
-set expandtab
-"set noexpandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set textwidth=80
-set formatoptions-=t formatoptions+=croql
-set modeline
 
 " viminfo: remember certain things when we exit
 " (http://vimdoc.sourceforge.net/htmldoc/usr_21.html)
@@ -101,9 +17,96 @@ set modeline
 "   n... : where to save the viminfo files
 set viminfo=%100,'100,/100,h,\"500,:1000,n$HOME/.vim/.swap/viminfo
 
+"""""""""""""""""""""""""
+" vim-plug
+"""""""""""""""""""""""""
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | PlugInstall | so $HOME/.vimrc
+endif
+
+call plug#begin('$HOME/.vim/bundle')
+Plug 'Modeliner', {'tag': '0.3.0'}
+Plug 'ervandew/supertab', {'tag': '2.1'}
+Plug 'scrooloose/nerdtree', {'tag': '5.0.0', 'on': 'NERDTreeToggle'}
+Plug 'tomasr/molokai'
+Plug 'aperezdc/vim-template'
+Plug 'vim-airline/vim-airline', {'tag': 'v0.8'}
+Plug 'godlygeek/tabular', {'tag': '1.0.0'}
+Plug 'tpope/vim-fugitive', {'tag': 'v2.2'}
+Plug 'mhinz/vim-signify'
+
+Plug 'elzr/vim-json'
+Plug 'darfink/vim-plist'
+Plug 'hail2u/vim-css3-syntax', {'tag': 'v0.18.0'}
+Plug 'plasticboy/vim-markdown'
+Plug 'pangloss/vim-javascript', {'tag': '1.2.5.1'}
+Plug 'hdima/python-syntax', {'tag': 'r3.5.0'}
+Plug 'fatih/vim-go', {'tag': 'v1.10'}
+call plug#end()
+
+"""""""""""""""""""""""""
+" global
+"""""""""""""""""""""""""
+
+" Encoding
+set encoding=utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,gb18030,big5,latin1
+
+syntax on
+set cursorline
+"set cursorcolumn
+set number
+set list!                           " Display unprintable characters
+set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
+
+" color
+try
+    set t_Co=256
+    colorscheme molokai
+    let g:molokai_original = 1
+catch
+    colorscheme default
+endtry
+
+" Misc
+filetype plugin indent on
+set hidden
+set wildmenu                        " Enhanced completion hints in command
+set wildmode=list:longest,full
+set backspace=eol,start,indent      " Allow backspace
+set complete=.,w,b,u,U,t,i,d        " Do lots of scanning on tab completion
+set updatecount=100                 " Write swap file to disk every 100 chars
+set directory=$HOME/.vim/.swap      " Directory to use for the swap file
+set diffopt=filler,iwhite
+set history=10000
+set scrolloff=3
+set visualbell t_vb=                " Disable error bells
+set shortmess+=A                    " Always edit file
+set nobackup                        " close backup files
+set nowritebackup
+set modifiable
+set laststatus=2
+set mouse=a                         " Mouse wheel
+let g:netrw_home=$HOME.'/.vim/.swap'
+
+" Formatting, indentation and tabbing
+set autoindent smartindent
+set smarttab                        " Make <tab> and <backspace> smarter
+set expandtab
+"set noexpandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set formatoptions-=t formatoptions+=croql
+set modeline
+
 " Undo
 set undolevels=10000
-" Allow undoes to persist even after a file is closed
 if has("persistent_undo")
     set undodir=$HOME/.vim/.swap
     set undofile
@@ -117,21 +120,21 @@ set hlsearch
 set incsearch
 set showmatch
 
-" to_html settings
-let html_number_lines = 1
-let html_ignore_folding = 1
-let html_use_css = 1
-let xml_use_xhtml = 1
+" Stoping automatic wrapping and highlight colorcolumn
+set textwidth=0
+autocmd FileType cmake,css,fortran,lisp,make,perl,sh,vim
+            \ setlocal textwidth=78 colorcolumn=+1
 
 " When opening a file, always jump to the last cursor position
 autocmd BufReadPost *
             \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-            \     exe "normal g'\"zz" |
+            \ exe "normal g'\"zz" |
             \ endif |
 
-
-" After 4s of inactivity, check for external file modifications on next keyrpress
+" After 4s of inactivity, check for file modifications on next keyrpress
 au CursorHold * checktime
+
+au FileType html setl sw=2 sts=2 et
 
 """""""""""""""""""""""""
 " Keybindings
@@ -139,118 +142,189 @@ au CursorHold * checktime
 let mapleader=","
 let localmapleader=","
 
-nmap <Leader>s :%S/
-vmap <Leader>s :S/
+" Follow scroll wheel to cursor
+map <ScrollWheelUp>     3k
+map <ScrollWheelDown>   3j
 
-vnoremap . :normal .<CR>
-vnoremap @ :normal! @
 
-" Toggles
-set pastetoggle=<F1>
-" the nmap is just for quicker powerline feedback
-nmap <silent> <F1>      :set invpaste<CR>
-nmap          <F2>      :setlocal spell!<CR>
-imap          <F2> <C-o>:setlocal spell!<CR>
-nmap <silent> <F3>      :set invwrap<CR>
+nmap <Leader>s  :%S/
+vmap <Leader>s  :S/
+
+vnoremap .  :normal .<CR>
+vnoremap @  :normal! @
+
+" up/down on displayed lines, not real lines. More useful than painful.
+noremap k   gk
+noremap j   gj
+
 " TODO toggle numbers
-
-map <Leader>/ :nohlsearch<cr>
-map <Home> :tprev<CR>
-map <End>  :tnext<CR>
+map <Leader>/   :nohlsearch<cr>
+map <S-l>       :tabprevious<CR>
+map <S-h>       :tabnext<CR>
 
 " TODO Do also cnext and cprev as a fallback
-map <PageDown> :lnext<CR>
-map <PageUp>   :lprev<CR>
+map <PageDown>  :lnext<CR>
+map <PageUp>    :lprev<CR>
 
 " Disable K for manpages - not used often and easy to accidentally hit
-noremap K k
+noremap K   k
 
 " Resize window splits
-nnoremap <C-k>    3<C-w>-
-nnoremap <C-j>    3<C-w>+
-nnoremap <C-h>    3<C-w><
-nnoremap <C-l>    3<C-w>>
+nnoremap <C-k>  3<C-w>-
+nnoremap <C-j>  3<C-w>+
+nnoremap <C-h>  3<C-w><
+nnoremap <C-l>  3<C-w>>
 
-nnoremap _ :split<cr>
+nnoremap _  :split<cr>
 nnoremap \| :vsplit<cr>
 
-vmap s :!sort<CR>
-vmap u :!sort -u<CR>
+vmap s  :!sort<CR>
+vmap u  :!sort -u<CR>
 
 " Write file when you forget to use sudo
-cmap w!! w !sudo tee % >/dev/null
+cmap w!!    w !sudo tee % >/dev/null
 
 """""""""""""""""""""""""
 " Cscope
 """""""""""""""""""""""""
 if has("cscope")
-    " Use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
     set cscopetag
-
-    " Check cscope for definition of a symbol before checking ctags. Set to 1 if
-    " you want the reverse search order.
     set csto=0
-
-    " Add any cscope database in current directory
     if filereadable("cscope.out")
         cs add cscope.out
     endif
-
-    " Show msg when any other cscope db is added
     set cscopeverbose
-end
+endif
+
+"""""""""""""""""""""""""
+" airline
+"""""""""""""""""""""""""
+if !empty(glob('~/.vim/bundle/vim-airline'))
+    let g:airline_powerline_fonts = 0
+    let g:airline#extensions#whitespace#enabled = 1
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#fnamemod = ':t'    " filename only
+    let g:airline#extensions#tabline#show_buffers = 1
+    let g:airline#extensions#tabline#show_splits = 0
+    let g:airline#extensions#tabline#show_tabs = 0
+    let g:airline#extensions#tabline#tab_nr_type = 2
+    let g:airline#extensions#hunks#non_zero_only = 1    " git gutter
+    let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+    let g:bufferline_echo = 0
+    set timeoutlen=200
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
+    " unicode symbols instead of powerline fonts
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
+    let g:airline#extensions#tabline#left_sep = ''
+    let g:airline#extensions#tabline#left_alt_sep = ''
+    let g:airline#extensions#tabline#right_sep = ''
+    let g:airline#extensions#tabline#right_alt_sep = ''
+    let g:airline_symbols.crypt = '🔒'
+    let g:airline_symbols.linenr = '¶'
+    let g:airline_symbols.maxlinenr = '☰'
+    let g:airline_symbols.branch = '⎇'
+    let g:airline_symbols.paste = 'ρ'
+    let g:airline_symbols.spell = 'Ꞩ'
+    let g:airline_symbols.notexists = '∄'
+    let g:airline_symbols.whitespace = 'Ξ'
+endif
+
 
 """""""""""""""""""""""""
 " CSS3-Syntax
 """""""""""""""""""""""""
-augroup VimCSS3Syntax
-    autocmd!
-    autocmd FileType css setlocal iskeyword+=-
-augroup END
+if !empty(glob('~/.vim/bundle/vim-css3-syntax'))
+    augroup VimCSS3Syntax
+        autocmd!
+        autocmd FileType css setlocal iskeyword+=-
+    augroup END
+endif
 
 """""""""""""""""""""""""
 " NERDTree
 """""""""""""""""""""""""
-nnoremap <C-n> :NERDTreeToggle<cr>
-let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$',
-            \ '\.so$', '\.egg$', '^\.git$', '\.cmi', '\.cmo', '\.elc$',
-            \ '\.doc\?', '\.xls\?', '\.ppt\?', '\.rtf$', '\.iso$', '\.img',
-            \ '\.jp\+g$', '\.png$', '\.gif$', '\.svg$', '\.bmp$', '\.tiff$', '\.pdf$' ]
-let NERDTreeHighlightCursorline=1
-let NERDTreeShowBookmarks=1
-let NERDTreeShowFiles=1
-" autocmd vimenter * NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+if !empty(glob('~/.vim/bundle/nerdtree'))
+    nnoremap <C-n> :NERDTreeToggle<cr>
+    let NERDTreeIgnore=[ '\.pyc$', '\.pyo$', '\.py\$class$', '\.obj$', '\.o$',
+                \ '\.so$', '\.egg$', '^\.git$', '\.cmi', '\.cmo', '\.elc$',
+                \ '\.doc\?', '\.xls\?', '\.ppt\?', '\.rtf$', '\.iso$',
+                \ '\.img', '\.jp\+g$', '\.png$', '\.gif$', '\.svg$', '\.bmp$',
+                \ '\.tiff$', '\.pdf$' ]
+    let NERDTreeHighlightCursorline=1
+    let NERDTreeShowBookmarks=1
+    let NERDTreeShowFiles=1
+endif
+
+"""""""""""""""""""""""""
+" Signify
+"""""""""""""""""""""""""
+if !empty(glob('~/.vim/bundle/vim-signify'))
+    let g:signify_vcs_list          = [ 'git', 'hg', 'svn' ]
+endif
 
 """""""""""""""""""""""""
 " template
 """""""""""""""""""""""""
-" let g:templates_plugin_loaded = 1
-" let g:templates_no_autocmd = 1
-let g:username = "Register"
-let g:email = "registerdedicated(at)gmail.com"
-let g:license = "GPLv3"
+if !empty(glob('~/.vim/bundle/vim-template'))
+    " let g:templates_plugin_loaded = 1
+    " let g:templates_no_autocmd = 1
+    let g:username = "Register"
+    let g:email = "registerdedicated(at)gmail.com"
+    let g:license = "GPLv3"
+endif
 
 """""""""""""""""""""""""
 " Supertab
 """""""""""""""""""""""""
-let g:SuperTabDefaultCompletionType = "<c-n>"
-
-"""""""""""""""""""""""""
-" GitGutter
-"""""""""""""""""""""""""
-let g:GitGutterEnable = 1
+if !empty(glob('~/.vim/bundle/supertab'))
+    let g:SuperTabDefaultCompletionType = "<c-n>"
+endif
 
 """""""""""""""""""""""""
 " Markdown
 """""""""""""""""""""""""
-let g:vim_markdown_folding_disabled=1
-let g:vim_markdown_no_default_key_mappings=1
-let g:vim_markdown_math=1
-let g:vim_markdown_frontmatter=1
+if !empty(glob('~/.vim/bundle/vim-markdown'))
+    let g:vim_markdown_folding_disabled=1
+    let g:vim_markdown_no_default_key_mappings=1
+    let g:vim_markdown_math=1
+    let g:vim_markdown_frontmatter=1
+    let g:vim_markdown_math = 1
+    let g:vim_markdown_json_frontmatter = 1
+endif
+
+"""""""""""""""""""""""""
+" Python syntax highligh
+"""""""""""""""""""""""""
+if !empty(glob('~/.vim/bundle/python-syntax'))
+    let g:python_highlight_all = 1
+endif
+
+"""""""""""""""""""""""""
+" VIM JSON
+"""""""""""""""""""""""""
+if !empty(glob('~/.vim/bundle/vim-json'))
+    let g:vim_json_syntax_conceal = 0
+endif
+
+"""""""""""""""""""""""""
+" Golang
+"""""""""""""""""""""""""
+if !empty(glob('~/.vim/bundle/vim-go'))
+    let g:go_highlight_functions = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_structs = 1
+    let g:go_highlight_interfaces = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_build_constraints = 1
+    let g:go_fmt_command = "goimports"
+    let g:go_fmt_fail_silently = 1
+    let g:go_fmt_autosave = 0
+endif
 
 """""""""""""""""""""""""
 " Local config

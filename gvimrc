@@ -2,31 +2,30 @@ set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
-set visualbell t_vb=
 
-autocmd VimEnter * set vb t_vb=
-set gcr = n:blinkon0
 set lines=50 columns=120
-
-map <F1> :set guifont=Monospace\ 9<CR>
-map <F2> :set guifont=Monospace\ 14<CR>
+autocmd VimEnter * set vb t_vb=
 
 " theme
 try
-    colorscheme monokai-light
+    colorscheme molokai
 catch
     colorscheme default
 endtry
 
-" macvim
-if has("gui_macvim")
-    set guifont=Monaco:h14
-
-    " Fullscreen takes up entire screen
-    set fuoptions = maxhorz,maxvert
-
-    " Command-Return for fullscreen
-    macmenu Window.Toggle\ Full\ Screen\ Mode key=<D-CR>
+if has('unix')
+    if has("gui_macvim") || has("gui_mac") || has("mac")
+        set guifont=Monaco:h11
+        map <F1> :set guifont=Monaco:h11<CR>
+        map <F2> :set guifont=Monaco:h13<CR>
+        macmenu Window.Toggle\ Full\ Screen\ Mode key=<D-CR>   " Command + Enter
+    else
+        set guifont=Monospace\ 11
+        map <C-F1> :set guifont=Monospace\ 11<CR>
+        map <C-F2> :set guifont=Monospace\ 13<CR>
+    endif
+" elseif has("win32") || has('win64')
+"   set ...
 endif
 
 silent! so $HOME/.vim/gvimrc.mine
