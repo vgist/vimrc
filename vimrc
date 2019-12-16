@@ -1,3 +1,12 @@
+" Encoding
+set encoding=utf-8
+scriptencoding utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,gb18030,big5,latin1
+"set langmenu=zh_CN.UTF-8
+"set helplang=cn
+
 " Create needed folder
 silent !mkdir -p $HOME/.vim/.swap
 
@@ -27,21 +36,21 @@ endif
 call plug#begin('$HOME/.vim/bundle')
 Plug 'vim-scripts/Modeliner', {'tag': '0.3.0'}
 Plug 'ervandew/supertab', {'tag': '2.1'}
-Plug 'scrooloose/nerdtree', {'tag': '5.0.0', 'on': 'NERDTreeToggle'}
+Plug 'scrooloose/nerdtree', {'tag': '6.4.1'}
 Plug 'tomasr/molokai'
 Plug 'aperezdc/vim-template'
-Plug 'vim-airline/vim-airline', {'tag': 'v0.9'}
+Plug 'vim-airline/vim-airline', {'tag': 'v0.11'}
 Plug 'godlygeek/tabular', {'tag': '1.0.0'}
-Plug 'tpope/vim-fugitive', {'tag': 'v2.5'}
+Plug 'tpope/vim-fugitive', {'tag': 'v3.1'}
 Plug 'mhinz/vim-signify', {'tag': 'v1.9'}
 
 Plug 'elzr/vim-json'
 Plug 'darfink/vim-plist'
-Plug 'hail2u/vim-css3-syntax', {'tag': 'v1.2.0'}
+Plug 'hail2u/vim-css3-syntax', {'tag': 'v1.4.0'}
 Plug 'plasticboy/vim-markdown'
 Plug 'pangloss/vim-javascript', {'tag': '1.2.5.1'}
 Plug 'hdima/python-syntax', {'tag': 'r3.5.0'}
-Plug 'fatih/vim-go', {'tag': 'v1.19'}
+Plug 'fatih/vim-go', {'tag': 'v1.21'}
 call plug#end()
 
 " global
@@ -55,15 +64,8 @@ set title
 set ruler
 set virtualedit=onemore             " block, insert, all, onemore
 set list!                           " Display unprintable characters
+"set listchars=tab:»\ ,trail:·,extends:›,precedes:«
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
-
-" Encoding
-set encoding=utf-8
-set termencoding=utf-8
-set fileencoding=utf-8
-set fileencodings=ucs-bom,utf-8,gb18030,big5,latin1
-"set langmenu=zh_CN.UTF-8
-"set helplang=cn
 
 " colorscheme
 try
@@ -236,10 +238,18 @@ if !empty(glob('~/.vim/bundle/nerdtree'))
                 \ '\.so$', '\.egg$', '^\.git$', '\.cmi', '\.cmo', '\.elc$',
                 \ '\.doc\?', '\.xls\?', '\.ppt\?', '\.rtf$', '\.iso$', '\.o$',
                 \ '\.img', '\.jp\+g$', '\.png$', '\.gif$', '\.svg$', '\.bmp$',
-                \ '\.tiff$', '\.pdf$' ]
+                \ '\.tiff$', '\.pdf$', '\.numbers$' ]
     let NERDTreeHighlightCursorline = 1
     let NERDTreeShowBookmarks = 1
     let NERDTreeShowFiles = 1
+    let NERDTreeShowHidden = 1
+    " close vim if the only window left open is a NERDTree
+    autocmd BufEnter * if (winnr("$") == 1
+                \ && exists("b:NERDTree")
+                \ && b:NERDTree.isTabTree()) | q | endif
+    " open a NERDTree when vim starts up if no files were specified
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 endif
 
 " Signify
