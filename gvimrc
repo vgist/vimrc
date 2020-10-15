@@ -1,30 +1,25 @@
-set guioptions-=m   "remove menu bar
-set guioptions-=T   "remove toolbar
-set guioptions-=r   "remove right-hand scroll bar
-set guioptions-=L   "remove left-hand scroll bar
+" GUI
+set termencoding=utf-8
+if has("gui_running")
+    set guioptions-=m   "remove menu bar
+    set guioptions-=T   "remove toolbar
+    set guioptions-=r   "remove right-hand scroll bar
+    set guioptions-=L   "remove left-hand scroll bar
 
-set lines=50 columns=140
-autocmd VimEnter * set vb t_vb=
+    set lines=38 columns=126
+    autocmd VimEnter * set vb t_vb=
 
-" theme
-try
-    colorscheme molokai
-catch
-    colorscheme default
-endtry
-
-if has('unix')
     set scrolloff=999
-    if has("mac")
+    if has("macunix")
         set guifont=Monaco:h13
         noremap <D-0> :set guifont=Monaco:h13<CR>       " Command + 0
-    else
+    elseif has("unix")
         set guifont=Monospace\ 11
         noremap <C-F1> :set guifont=Monospace\ 11<CR>
         noremap <C-F2> :set guifont=Monospace\ 13<CR>
+    " elseif has("win32") || has('win64')
+    "   set ...
     endif
-" elseif has("win32") || has('win64')
-"   set ...
 endif
 
-silent! so $HOME/.vim/gvimrc.mine
+" vim: set et fenc=utf-8 ff=unix sts=4 sw=4 ts=4 :

@@ -1,5 +1,6 @@
+LOCATION = $(shell pwd)
 DOTFILES = $(HOME)/.vimrc $(HOME)/.gvimrc
-OTHER = $(HOME)/.vim/bundle $(HOME)/.vim/autoload
+OTHER = $(LOCATION)/plugged $(LOCATION)/autoload
 TARGETS = $(DOTFILES)
 SHELL = /bin/bash
 
