@@ -1,161 +1,207 @@
-" Load basic config
-silent! so $HOME/.vim/basic.vim
+" encoding
+set encoding=utf-8
+scriptencoding utf-8
+set termencoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set fileformats=unix,dos,mac
+"set langmenu=zh_CN.UTF-8
+"set helplang=cn
 
-" vim-plug
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall | PlugInstall | so $HOME/.vimrc
+" Create needed folder
+silent !mkdir -p $HOME/.vim/.swap
+
+" Be iMproved, required
+if &compatible
+    set nocompatible
 endif
 
-call plug#begin('$HOME/.vim/plugged')
-Plug 'vim-scripts/Modeliner', {'tag': '0.3.0'}
-Plug 'ervandew/supertab', {'tag': '2.1'}
-Plug 'preservim/nerdtree', {'tag': '6.9.10'}
-  Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'aperezdc/vim-template'
-Plug 'vim-airline/vim-airline', {'tag': 'v0.11'}
-Plug 'godlygeek/tabular', {'tag': '1.0.0'}
-Plug 'tpope/vim-fugitive', {'tag': 'v3.2'}
-Plug 'mhinz/vim-signify', {'tag': 'legacy'}
-
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'elzr/vim-json'
-Plug 'darfink/vim-plist'
-Plug 'hail2u/vim-css3-syntax', {'tag': 'v1.8.0'}
-Plug 'plasticboy/vim-markdown'
-Plug 'pangloss/vim-javascript', {'tag': '1.2.5.1'}
-Plug 'hdima/python-syntax', {'tag': 'r3.5.0'}
-Plug 'fatih/vim-go', {'tag': 'v1.24'}
-call plug#end()
-
-" colorscheme
-try
-    colorscheme lucario
-    hi CursorLineNr ctermfg=NONE ctermbg=236 cterm=bold guifg=NONE guibg=#405160 gui=NONE
-    hi SpecialKey   ctermfg=NONE ctermbg=NONE cterm=NONE guifg=#61bbc8 guibg=NONE gui=NONE
-    hi Comment      ctermfg=44 ctermbg=NONE cterm=italic guifg=#5c98cd guibg=NONE gui=italic
-catch
-    colorscheme default
-endtry
-
-" MacOS italic
-if has("macunix")
+" MacOS & Unix italic
+if has("macunix") || has("unix")
     let &t_ZH="\e[3m"
     let &t_ZR="\e[23m"
 endif
 
-" template
-if !empty(glob('~/.vim/plugged/vim-template'))
-    " let g:templates_plugin_loaded = 1
-    " let g:templates_no_autocmd = 1
-    let g:username = "Register"
-    let g:license = "GPLv3"
+" viminfo: remember certain things when we exit
+set viminfo=%50,\"100,'20,/20,:50,h,f1,n$HOME/.vim/.swap/viminfo
+"           |    |    |   |   |   | |  + viminfo file path
+"           |    |    |   |   |   | + file marks 0-9,A-Z. 0 = not storeed
+"           |    |    |   |   |   + disable hlsearch loading viminfo
+"           |    |    |   |   + command line history saved
+"           |    |    |   + search history saved
+"           |    |    + file marks saved
+"           |    + lines saved each register (old name for <, vi6,2)
+"           + save/restore buffer list
+
+
+" Global Settings
+syntax on
+set cursorline
+"set cursorcolumn
+set number
+set title
+"set t_ti= t_te=
+set ruler                           " Always show current position
+set virtualedit=onemore             " block, insert, all, onemore
+set list!                           " Display unprintable characters
+set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
+
+" Formatting, indentation and tabbing
+set autoindent smartindent shiftround
+set smarttab                        " Make <tab> and <backspace> smarter
+set expandtab                       " expand tabs to spaces
+"set noexpandtab
+set tabstop=4 softtabstop=4 shiftwidth=4
+set formatoptions-=t formatoptions+=croql
+set modeline
+
+" Misc
+filetype plugin indent on
+set hidden
+set wildmenu                        " Enhanced completion hints in command
+set wildmode=list:longest,full
+set backspace=eol,start,indent      " Allow backspace
+set complete=.,w,b,u,U,t,i,d        " Do lots of scanning on tab completion
+set updatecount=100                 " Write swap file to disk every 100 chars
+"set autochdir
+set directory=$HOME/.vim/.swap      " Directory to use for the swap file
+set diffopt=filler,iwhite
+set history=10000
+"set wrap
+"set linebreak
+set scrolloff=3
+set visualbell t_vb=                " Disable error bells
+set shortmess+=A                    " Always edit file
+set nobackup                        " close backup files
+set nowritebackup
+set modifiable
+"set laststatus=2
+set mouse=a                         " Mouse wheel
+let g:netrw_home=$HOME.'/.vim/.swap'
+"set showcmd
+set magic                           " For regular expressions
+
+" Persistent undo
+set undolevels=10000
+if has("persistent_undo")
+    set undodir=$HOME/.vim/.swap
+    set undofile
+    set undoreload=10000
 endif
 
-" airline
-if !empty(glob('~/.vim/plugged/vim-airline'))
-    "nnoremap <tab>          :bnext<CR>
-    "nnoremap <S-tab>        :bprevious<CR>
-    nnoremap <leader>,      :bfirst<CR>
-    nnoremap <leader>.      :blast<CR>
-    nnoremap <leader>1      :b1<CR>
-    nnoremap <leader>2      :b2<CR>
-    nnoremap <leader>3      :b3<CR>
-    nnoremap <leader>4      :b4<CR>
-    nnoremap <leader>5      :b5<CR>
-    nnoremap <leader>6      :b6<CR>
-    nnoremap <leader>7      :b7<CR>
-    nnoremap <leader>8      :b8<CR>
-    nnoremap <leader>9      :b9<CR>
-    if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
+" Search settings
+set ignorecase                      " ignore case buring search
+set smartcase                       " ignore 'ignorecase' when UPPer in search
+set hlsearch                        " highlight search
+set incsearch                       " do incremental searching
+set showmatch                       " show matching parenthese
+set wrapscan
+
+set textwidth=0
+autocmd FileType c,cmake,cpp,css,fortran,lisp,make,perl,scss,sh,vim
+            \ setlocal textwidth=78 colorcolumn=+1 wrap linebreak formatoptions+=t
+autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
+
+" Auto reload when editing it
+autocmd! bufwritepost .vimrc source %
+
+" When opening a file, always jump to the last cursor position
+autocmd BufReadPost *
+            \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+            \ exe "normal g'\"zz" |
+            \ endif |
+
+" After 4s of inactivity, check for file modifications on next keyrpress
+autocmd CursorHold * checktime
+
+" Cscope
+if has("cscope")
+    set cscopetag
+    set csto=0
+    if filereadable("cscope.out")
+        cs add cscope.out
     endif
-    let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#buffer_nr_show = 1
-    let g:airline#extensions#tabline#formatter = 'unique_tail'
-    if !has('gui')
-        let g:airline_symbols.branch = '⎇'
+    set cscopeverbose
+endif
+
+" Keybindings
+let mapleader=","
+let localmapleader=","
+
+" allow saving files as sudo
+cmap w!! w !sudo tee > /dev/null %
+
+" yank to clipboard
+if has("clipboard")
+    " Copy, paste, undo, save, select all
+    vnoremap <C-c> "+y
+    nnoremap <C-V> "*p
+    nnoremap <C-z> u
+    nnoremap <C-s> :w!<cr>
+    nnoremap <C-a> ggVG
+    set clipboard=unnamed             " copy to the system clipboard
+    if has("unnamedplus")             " X11 support
+        set clipboard+=unnamedplus
     endif
 endif
 
+" Follow scroll wheel to cursor
+noremap <ScrollWheelUp>     3k
+noremap <ScrollWheelDown>   3j
 
-" CSS3-Syntax
-if !empty(glob('~/.vim/plugged/vim-css3-syntax'))
-    augroup VimCSS3Syntax
-        autocmd!
-        autocmd FileType css setlocal iskeyword+=-
-    augroup END
-endif
+nnoremap <Leader>s  :%S/
+vnoremap <Leader>s  :S/
 
-" NERDTree
-if !empty(glob('~/.vim/plugged/nerdtree'))
-    nnoremap <C-n> :NERDTreeToggle<cr>
-    let NERDTreeIgnore = [ '.pyc', '.pyo', '.DS_Store', '.localized' ]
-    let NERDTreeHighlightCursorline = 1
-    let NERDTreeShowBookmarks = 1
-    let NERDTreeShowFiles = 1
-    let NERDTreeShowHidden = 1
-    " Close vim if the only window left open is a NERDTree
-    autocmd BufEnter * if (winnr("$") == 1
-                \ && exists("b:NERDTree")
-                \ && b:NERDTree.isTabTree()) | q | endif
-    " If more than one window and previous buffer was NERDTree, go back to it.
-    autocmd BufEnter * if bufname('#') =~# "^NERD_tree_"
-                \ && winnr('$') > 1 | b# | endif
-    " Open a NERDTree automatically when no files were specified
-    autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |
-                \ NERDTree | endif
-    " Open a NERDTree automatically when opening a directory
-    autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0])
-                \ && !exists("s:std_in") | exe 'NERDTree' argv()[0] |
-                \ wincmd p | ene | exe 'cd '.argv()[0] | endif
-    " Avoid crashes while the cursor is on the NERDTree window
-    let g:plug_window = 'noautocmd vertical topleft new'
-endif
+vnoremap .  :normal .<cr>
+vnoremap @  :normal! @
 
-" Signify
-if !empty(glob('~/.vim/plugged/vim-signify'))
-    let g:signify_vcs_list = [ 'git', 'hg', 'svn' ]
-endif
+" up/down on displayed lines, not real lines. More useful than painful.
+nnoremap k   gk
+nnoremap j   gj
 
-" Supertab
-if !empty(glob('~/.vim/plugged/supertab'))
-    let g:SuperTabDefaultCompletionType = "<c-n>"
-endif
+" toggle numbers
+noremap <Leader>/  :nohlsearch<cr>
 
-" Markdown
-if !empty(glob('~/.vim/plugged/vim-markdown'))
-    let g:vim_markdown_folding_disabled = 1
-    let g:vim_markdown_no_default_key_mappings = 1
-    let g:vim_markdown_math = 1
-    let g:vim_markdown_frontmatter = 1
-    let g:vim_markdown_math = 1
-    let g:vim_markdown_json_frontmatter = 1
-endif
+" tabprevious and tabnext
+noremap <S-l>      :tabprevious<cr>
+noremap <S-h>      :tabnext<cr>
 
-" Python syntax highligh
-if !empty(glob('~/.vim/plugged/python-syntax'))
-    let g:python_highlight_all = 1
-endif
+" Do also cnext and cprev as a fallback
+noremap <PageDown>  :lnext<cr>
+noremap <PageUp>    :lprev<cr>
 
-" VIM JSON
-if !empty(glob('~/.vim/plugged/vim-json'))
-    let g:vim_json_syntax_conceal = 0
-endif
+" Disable K for manpages - not used often and easy to accidentally hit
+noremap K   k
 
-" Golang
-if !empty(glob('~/.vim/plugged/vim-go'))
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_interfaces = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_build_constraints = 1
-    let g:go_fmt_command = "goimports"
-    let g:go_fmt_fail_silently = 1
-    let g:go_fmt_autosave = 0
-endif
+" Resize window splits
+nnoremap <C-k>  3<C-w>-
+nnoremap <C-j>  3<C-w>+
+nnoremap <C-h>  3<C-w><
+nnoremap <C-l>  3<C-w>>
+
+" Split window
+nnoremap _  :split<cr>
+nnoremap \| :vsplit<cr>
+
+vnoremap s  :!sort<cr>
+vnoremap u  :!sort -u<cr>
+
+" colorscheme
+try
+    if empty(glob('~/.vim/colors/lucario.vim'))
+        silent !curl -fLo $HOME/.vim/colors/lucario.vim --create-dirs
+                    \ https://raw.githubusercontent.com/raphamorim/lucario/master/colors/lucario.vim
+    endif
+    colorscheme lucario
+    hi CursorLineNr ctermfg=NONE ctermbg=236 cterm=bold guifg=NONE guibg=#405160 gui=NONE
+    hi SpecialKey   ctermfg=NONE ctermbg=NONE cterm=NONE guifg=#61bbc8 guibg=NONE gui=NONE
+    hi Comment      ctermfg=44 ctermbg=NONE cterm=italic guifg=#5c98cd guibg=NONE gui=italic
+    hi clear SignColumn
+catch
+    colorscheme default
+endtry
+
+" Load plug.vim
+silent! so $HOME/.vim/plugrc.vim
 
 " vim: set et fenc=utf-8 ff=unix sts=4 sw=4 ts=4 :

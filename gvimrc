@@ -11,8 +11,8 @@ if has("gui_running")
 
     set scrolloff=999
     if has("macunix")
-        set guifont=Monaco:h13
-        noremap <D-0> :set guifont=Monaco:h13<CR>       " Command + 0
+        set guifont=Menlo:h12
+        noremap <D-0> :set guifont=Monaco:h12<CR>       " Command + 0
     elseif has("unix")
         set guifont=Monospace\ 11
         noremap <C-F1> :set guifont=Monospace\ 11<CR>
