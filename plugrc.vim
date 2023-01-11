@@ -13,17 +13,17 @@ Plug 'preservim/nerdtree', {'tag': '6.10.16'}
 Plug 'aperezdc/vim-template'
 Plug 'vim-airline/vim-airline', {'tag': 'v0.11'}
 Plug 'godlygeek/tabular', {'tag': '1.0.0'}
-Plug 'tpope/vim-fugitive', {'tag': 'v3.6'}
+Plug 'tpope/vim-fugitive', {'tag': 'v3.7'}
 Plug 'mhinz/vim-signify', {'tag': 'stable'}
 
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'elzr/vim-json'
 Plug 'darfink/vim-plist'
-Plug 'hail2u/vim-css3-syntax', {'tag': 'v1.10.1'}
+Plug 'hail2u/vim-css3-syntax', {'tag': 'v2.0.0'}
 Plug 'plasticboy/vim-markdown'
 Plug 'pangloss/vim-javascript', {'tag': '1.2.5.1'}
 Plug 'hdima/python-syntax', {'tag': 'r3.5.0'}
-Plug 'fatih/vim-go', {'tag': 'v1.26-rc.1'}
+Plug 'fatih/vim-go', {'tag': 'v1.28'}
 Plug 'nfnty/vim-nftables'
 call plug#end()
 
@@ -83,18 +83,14 @@ if !empty(glob('~/.vim/plugged/nerdtree'))
                 \ && exists("b:NERDTree")
                 \ && b:NERDTree.isTabTree()) | q | endif
     " If more than one window and previous buffer was NERDTree, go back to it.
-    autocmd BufEnter * if bufname('#') =~# "^NERD_tree_"
-                \ && winnr('$') > 1 | b# | endif
     " Open a NERDTree automatically when no files were specified
     autocmd StdinReadPre * let s:std_in=1
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |
                 \ NERDTree | endif
     " Open a NERDTree automatically when opening a directory
     autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0])
-                \ && !exists("s:std_in") | exe 'NERDTree' argv()[0] |
-                \ wincmd p | ene | exe 'cd '.argv()[0] | endif
-    " Avoid crashes while the cursor is on the NERDTree window
-    let g:plug_window = 'noautocmd vertical topleft new'
+                \ && !exists('s:std_in') | execute 'NERDTree' argv()[0] |
+                \ wincmd p | enew | execute 'cd '.argv()[0] | endif
 endif
 
 " Signify
