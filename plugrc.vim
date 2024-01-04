@@ -8,7 +8,7 @@ endif
 call plug#begin('$HOME/.vim/plugged')
 Plug 'vim-scripts/Modeliner', {'tag': '0.3.0'}
 Plug 'ervandew/supertab', {'tag': '2.1'}
-Plug 'preservim/nerdtree', {'tag': '6.10.16'}
+Plug 'preservim/nerdtree', {'tag': '7.1.2'}
   Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'aperezdc/vim-template'
 Plug 'vim-airline/vim-airline', {'tag': 'v0.11'}
@@ -19,13 +19,19 @@ Plug 'mhinz/vim-signify', {'tag': 'stable'}
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'elzr/vim-json'
 Plug 'darfink/vim-plist'
-Plug 'hail2u/vim-css3-syntax', {'tag': 'v2.0.0'}
+Plug 'hail2u/vim-css3-syntax', {'tag': 'v2.2.1'}
 Plug 'plasticboy/vim-markdown'
 Plug 'pangloss/vim-javascript', {'tag': '1.2.5.1'}
 Plug 'hdima/python-syntax', {'tag': 'r3.5.0'}
 Plug 'fatih/vim-go', {'tag': 'v1.28'}
 Plug 'nfnty/vim-nftables'
 call plug#end()
+
+" old plug layout
+"if !empty(glob('$HOME/.vim/autoload/plug.vim'))
+"    let g:plug_window = 'vertical topleft new'
+"    let g:plug_pwindow = 'above 12new'
+"endif
 
 " template
 if !empty(glob('~/.vim/plugged/vim-template'))
