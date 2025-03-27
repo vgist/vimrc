@@ -8,6 +8,9 @@ set fileformats=unix,dos,mac
 "set langmenu=zh_CN.UTF-8
 "set helplang=cn
 
+" regexp engine automatic
+set regexpengine=0
+
 " Create needed folder
 silent !mkdir -p $HOME/.vim/.swap
 
