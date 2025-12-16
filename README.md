@@ -1,4 +1,4 @@
-simple/weight vim's configration with [vim-plug](https://github.com/junegunn/vim-plug)
+lightweight vim's configuration with [vim-plug](https://github.com/junegunn/vim-plug)
 
 Installation
 ------------

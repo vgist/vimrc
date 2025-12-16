@@ -8,7 +8,7 @@ all:
 	@echo type make install.
 
 $(HOME)/.%: %
-	ln -sf $(PWD)/$< $@
+	ln -sf $(CURDIR)/$< $@
 
 install: $(TARGETS)
 	@vim +PlugInstall +qall

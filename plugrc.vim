@@ -2,7 +2,7 @@
 if empty(glob('$HOME/.vim/autoload/plug.vim'))
     silent !curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall | PlugInstall | so $HOME/.vim/vimrc
+    autocmd VimEnter * PlugInstall | so $HOME/.vim/vimrc
 endif
 
 call plug#begin('$HOME/.vim/plugged')
@@ -17,7 +17,8 @@ Plug 'tpope/vim-fugitive', {'tag': '*'}
 Plug 'mhinz/vim-signify', {'tag': 'stable'}
 
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'elzr/vim-json'
+"Plug 'elzr/vim-json'
+Plug 'neoclide/jsonc.vim'
 Plug 'darfink/vim-plist'
 Plug 'hail2u/vim-css3-syntax', {'tag': '*'}
 Plug 'plasticboy/vim-markdown'
@@ -115,7 +116,6 @@ if !empty(glob('~/.vim/plugged/vim-markdown'))
     let g:vim_markdown_no_default_key_mappings = 1
     let g:vim_markdown_math = 1
     let g:vim_markdown_frontmatter = 1
-    let g:vim_markdown_math = 1
     let g:vim_markdown_json_frontmatter = 1
 endif
 
