@@ -3,7 +3,7 @@ set encoding=utf-8
 scriptencoding utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+set fileencodings=ucs-bom,utf-8,gb18030,big5,euc-jp,euc-kr,latin1
 set fileformats=unix,dos,mac
 "set langmenu=zh_CN.UTF-8
 "set helplang=cn
@@ -136,15 +136,18 @@ cmap w!! w !sudo tee > /dev/null %
 
 " yank to clipboard
 if has("clipboard")
-    " Copy, paste, undo, save, select all
-    vnoremap <C-c> "+y
-    nnoremap <C-V> "*p
-    nnoremap <C-z> u
-    nnoremap <C-s> :w!<cr>
-    nnoremap <C-a> ggVG
-    set clipboard=unnamed             " copy to the system clipboard
-    if has("unnamedplus")             " X11 support
-        set clipboard+=unnamedplus
+    " Check if we are in an SSH session, and if there is no X11 forwarding
+    if !empty($SSH_TTY) && empty($DISPLAY)
+        set clipboard=
+        vnoremap <C-c> "0y
+        nnoremap <C-V> "0p
+    else
+        set clipboard=unnamed
+        if has("unnamedplus")
+            set clipboard+=unnamedplus
+        endif
+        vnoremap <C-c> "+y
+        nnoremap <C-V> "*p
     endif
 endif
 
