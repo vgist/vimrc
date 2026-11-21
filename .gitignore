@@ -1,6 +1,7 @@
 .swap/*
+.undo/*
 plugged/*
-autoload/*
+autoload/plug.vim
 
 # Mac
 .DS_Store

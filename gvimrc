@@ -1,5 +1,4 @@
 " GUI
-set termencoding=utf-8
 if has("gui_running")
     set guioptions-=m   "remove menu bar
     set guioptions-=T   "remove toolbar

@@ -1,21 +1,16 @@
 LOCATION = $(shell pwd)
-DOTFILES = $(HOME)/.vimrc $(HOME)/.gvimrc
 OTHER = $(LOCATION)/plugged $(LOCATION)/autoload
-TARGETS = $(DOTFILES)
 SHELL = /bin/bash
 
 all:
 	@echo type make install.
 
-$(HOME)/.%: %
-	ln -sf $(CURDIR)/$< $@
-
-install: $(TARGETS)
+install:
 	@vim +PlugInstall +qall
 
 update:
 	@echo Update vim plugins...
-	@git pull
+	@git pull --ff-only
 	@vim +PlugUpdate +qall
 
 upgrade:
@@ -23,7 +18,6 @@ upgrade:
 	@vim +PlugUpgrade +qall
 
 clean:
-	rm -f $(DOTFILES)
 	rm -rf $(OTHER)
 
 .PHONY: install update upgrade clean

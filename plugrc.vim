@@ -2,10 +2,13 @@
 if empty(glob('$HOME/.vim/autoload/plug.vim'))
     silent !curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs
                 \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall | so $HOME/.vim/vimrc
+    augroup vimrc_plug_install
+        autocmd!
+        autocmd VimEnter * PlugInstall --sync | enew | so $HOME/.vim/vimrc
+    augroup END
 endif
 
-call plug#begin('$HOME/.vim/plugged')
+call plug#begin('~/.vim/plugged')
 Plug 'vim-scripts/Modeliner', {'tag': '*'}
 Plug 'ervandew/supertab', {'tag': '*'}
 Plug 'preservim/nerdtree', {'tag': '*'}
@@ -85,19 +88,21 @@ if !empty(glob('~/.vim/plugged/nerdtree'))
     let NERDTreeShowBookmarks = 1
     let NERDTreeShowFiles = 1
     let NERDTreeShowHidden = 1
-    " Close vim if the only window left open is a NERDTree
-    autocmd BufEnter * if (winnr("$") == 1
-                \ && exists("b:NERDTree")
-                \ && b:NERDTree.isTabTree()) | q | endif
-    " If more than one window and previous buffer was NERDTree, go back to it.
-    " Open a NERDTree automatically when no files were specified
-    autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |
-                \ NERDTree | endif
-    " Open a NERDTree automatically when opening a directory
-    autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0])
-                \ && !exists('s:std_in') | execute 'NERDTree' argv()[0] |
-                \ wincmd p | enew | execute 'cd '.argv()[0] | endif
+    augroup nerdtree_settings
+        autocmd!
+        " Close vim if the only window left open is a NERDTree
+        autocmd BufEnter * if (winnr("$") == 1
+                    \ && exists("b:NERDTree")
+                    \ && b:NERDTree.isTabTree()) | q | endif
+        " Open a NERDTree automatically when no files were specified
+        autocmd StdinReadPre * let s:std_in=1
+        autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |
+                    \ NERDTree | endif
+        " Open a NERDTree automatically when opening a directory
+        autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0])
+                    \ && !exists('s:std_in') | execute 'NERDTree' argv()[0] |
+                    \ wincmd p | enew | execute 'cd '.argv()[0] | endif
+    augroup END
 endif
 
 " Signify
@@ -122,11 +127,6 @@ endif
 " Python syntax highligh
 if !empty(glob('~/.vim/plugged/python-syntax'))
     let g:python_highlight_all = 1
-endif
-
-" VIM JSON
-if !empty(glob('~/.vim/plugged/vim-json'))
-    let g:vim_json_syntax_conceal = 0
 endif
 
 " Golang
